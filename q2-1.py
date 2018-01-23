@@ -6,7 +6,7 @@ def responsibilities(k, mat):
     return mat
 
 
-
+#test case
 k = 2
 a = 1000*np.random.random((4,4))
 res = responsibilities(k, a)
