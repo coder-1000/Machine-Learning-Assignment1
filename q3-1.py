@@ -66,5 +66,9 @@ def prediction_gender_recognition(res, target_mat, k):
             output = 0
         elif (classification * k == 1):
             output = 1
+                      
+        class_vec[row] = output
+    
+    return class_vec
         
         
