@@ -1,3 +1,6 @@
+'''NOT FINISHED! WAITING FOR OTHER FUNCTION IN ORDER TO TEST IT'''
+
+
 import tensorflow as tf
 
 def loss_function(N, actual_y, x_data):
