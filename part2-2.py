@@ -42,11 +42,11 @@ train_loss = loss_function(80, trainTarget, trainData)
 
 #test data MSE loss
 N = tf.size(testData)
-test_loss = loss_function(10, testTarget, trainTarget)
+test_loss = loss_function(10, testTarget, testData)
 
 #validation data MSE loss
 N = tf.size(validData)
-valid_loss = loss_function(10, validData, trainValid)
+valid_loss = loss_function(10, validTarget, ValidData)
 
 
 
