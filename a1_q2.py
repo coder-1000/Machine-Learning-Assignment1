@@ -58,8 +58,9 @@ def responsibility(distanceMatrix, k):
         #print("flat indices");
         #print(session.run(flatIndices));
         #print("Responsibility Matrix");
-        #print(session.run(resVec));
-
+        resVec = tf.reshape(resVec, [dm.shape[0], dm.shape[1]]);
+        print(session.run(resVec));
+        return(resVec);
 ###########################################################################
 
 
@@ -71,7 +72,7 @@ def responsibility(distanceMatrix, k):
 
 if __name__ == "__main__":
    
-    test = [[0,0,0], [1,1,1]];
+    test = [[0,0,0], [9,9,9]];
     training = [[0,0,0],[3,3,3], [2,2,2] ,[1,1,1],];
     
     #print(test);
