@@ -17,17 +17,22 @@ import numpy as np;
 
 
 def euclidian_distance(x_data,z_data):
-  
+  											
     xtf = tf.expand_dims(x_data,1); #creates a N1x1xD
     ztf = tf.expand_dims(z_data,0); #creates a 1xN2XD
-  
+  	
+
+    #with tf.Session() as session:
+        #print(session.run(xtf));
+        #print(session.run(ztf));
+
     #show dimensions
     print(xtf.shape);
     print(ztf.shape);
   
     result = xtf - ztf;
     result = result * result;
-    result = tf.reduce_sum(result); #took out the 2
+    result = tf.reduce_sum(result,2); #took out the 2
 
    # print(result.shape);
     #with tf.Session() as session:
@@ -90,10 +95,10 @@ def responsibility(distanceMatrix, k):
 
 def prediction_y(x_data, train_data, actual_y,k):
   #finds the prediction for a certain test point using the targetData of the training examples
- 
+ 		
     reponsability_mat = responsibility(euclidian_distance(x_data, train_data),k); #broadcast x_data and train_data
-    target = tf.transpose(target)
-    prediction = tf.mat_mul(target,responsability_mat)
+    actual_y = tf.transpose(actual_y)
+    prediction = tf.mat_mul(actual_y,responsability_mat)
     return prediction
   
 ###########################################################################
@@ -105,7 +110,7 @@ def loss_function(N, actual_y,train_data, x_data,k):
  
   #applies MSE loss function and sums over all the square errors
     for n in range(N):
-        res = tf.pow(tf.abs(prediction_y(x_data,train_data,actual_y,k)- actual_y),2)
+        res = tf.pow(tf.abs(prediction_y(x_data[n],train_data[n],actual_y,k)- actual_y[n]),2)
         sum = sum + res 
    
     sum = tf.divide(sum, 2*N)   #res = res/(2*N)
@@ -143,16 +148,17 @@ sess = tf.InteractiveSession()
 for k_num in k_list:
 
     #training data MSE loss
-    train_loss = sess.run(loss_function(80, actual_y,x_data,train_data,k), feed_dict = {actual_y:trainTarget,train_data: trainData, x_data:trainData, k:k_num})
-    train_dict[k] = train_loss;
+    feed = {actual_y:trainTarget,train_data: trainData, x_data:trainData, k:k_num}
+    train_loss = sess.run(loss_function(80, actual_y,x_data,train_data,k), feed_dict = feed)
+    #train_dict[k] = train_loss;
 
     #test data MSE loss
-    test_loss = sess.run(loss_function(10, actual_y,train_data, x_data,k), feed_dict = {actual_y:testTarget, train_data: trainData, x_data:testData, k:k_num})
-    test_dict[k] = test_loss;
+    #test_loss = sess.run(loss_function(10, actual_y,train_data, x_data,k), feed_dict = {actual_y:testTarget, train_data: trainData, x_data:testData, k:k_num})
+    #test_dict[k] = test_loss;
 
     #validation data MSE loss
-    valid_loss = sess.run(loss_function(10, actual_y, train_data, x_data, k), feed_dict = {actual_y:validTarget, train_data: trainData, x_data:validData, k:k_num})
-    valid_dict[k] = valid_loss;
+    #valid_loss = sess.run(loss_function(10, actual_y, train_data, x_data, k), feed_dict = {actual_y:validTarget, train_data: trainData, x_data:validData, k:k_num})
+    #valid_dict[k] = valid_loss;
 
 
 
