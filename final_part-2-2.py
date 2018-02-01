@@ -38,13 +38,22 @@ def responsibility(distanceMatrix, k):
     offsets = tf.expand_dims(offsets, 0);
     offsets = tf.transpose(offsets);
 
+    #print("offsets shape");
+    #print(offsets.shape); 
+    #print("indices shape");
+    #print(indices.shape);
+
     indices = indices + offsets;
     indices = tf.to_int64(indices);
+
 
     flatIndices = tf.reshape(indices, [indices.shape[0]*indices.shape[1]]);
     resVal = tf.constant(1.0,tf.float64)/tf.constant(k,tf.float64);
     flatRes = tf.fill([flatIndices.shape[0]],resVal);
-  
+ 
+    #print("indices shape");
+    #print(flatIndices.shape[0], flatIndices.shape[1]);
+
     size = dm.shape[0]*dm.shape[1];
   
     ref = tf.Variable(tf.zeros([size],tf.float64));
@@ -52,8 +61,10 @@ def responsibility(distanceMatrix, k):
     with tf.Session() as session:
         session.run(tf.global_variables_initializer());
         resVec =  tf.scatter_update(ref,flatIndices, flatRes); 
-      
+
     resVec = tf.reshape(resVec, [distanceMatrix.shape[0], distanceMatrix.shape[1]]);
+    #print("resvec shape");
+    #print(resVec.shape);
 
     return resVec
 ###########################################################################
@@ -71,7 +82,8 @@ def calculate_predictions(targets, resMat):
     
     yhats = tf.multiply(resMat,targets);#multiplies close targets by 1/k and sets others to 0 
     yhats = tf.reduce_sum(yhats,1);#add the averaged values together
-    yhats = tf.transpose(yhats);
+    yhats = tf.transpose(yhats);#make into col vecto
+    #print("yhat shape\n", yhats.shape);
     return(yhats);
 
 ###########################################################################
@@ -88,7 +100,7 @@ def mse_loss(predictions,targets):
     z = tf.cast(z,tf.float64)
     
     distance = euclidian_distance(x, z);#squared error
-    mse = distance/2/(tf.size(x, out_type = tf.float64));#mean squared error
+    mse = distance/(tf.size(x, out_type = tf.float64));#mean squared error
     
     return mse
     
@@ -120,8 +132,8 @@ with tf.Session() as sess:
         #sess.run(tf.global_variables_initializer());
     
         #train data MSE loss
-        train_data = trainData;#tf.convert_to_tensor(trainData)
-        train_target = trainTarget; #tf.convert_to_tensor(trainTarget)
+        train_data = trainData;
+        train_target = trainTarget;
         
         x = train_data; #80x1
         z = train_data; #80x1
