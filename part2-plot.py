@@ -68,13 +68,22 @@ def calculate_predictions(targets, resMat):
     
     resMat = tf.cast(resMat, tf.float64)
     targets = tf.cast(targets, tf.float64)
-    
-    yhats = tf.multiply(resMat,targets);#multiplies close targets by 1/k and sets others to 0 
-    yhats = tf.transpose(yhats);
-    
-    yhats = tf.reduce_sum(yhats,1);#add the averaged values together
-    print("yhat shape");
-    print(yhats.shape);
+   
+    with tf.Session() as sess:
+        sess.run(tf.global_variables_initializer());
+        
+        #print("targets\n", targets);
+        #print(sess.run(targets));
+
+        #print("resMat\n", resMat);
+        #print(sess.run(resMat[:][1]));
+        #print("targets\n", targets);
+        
+        yhats = tf.matmul(resMat,targets);#multiplies close targets by 1/k and sets others to 0 
+        #print("after multiply");
+        #print(sess.run(yhats[0:10]));
+        #print(yhats);
+        
     return(yhats);
 
 
@@ -93,31 +102,32 @@ testData, testTarget = data[randIdx[90:100]], target[randIdx[90:100]]
 
 import matplotlib.pyplot as plt
 #generates vector X to be used as test data
-X = np.linspace(1.0, 11.0, num = 1000)[:, np.newaxis]
+X = np.linspace(1.0, 10.0, num = 1000)[:, np.newaxis]
 
 #go through all the k values and plot the prediction using X and training data
 with tf.Session() as sess:
     k_list = [1,3,5,50]
+    #k_list = [1]
     for k_num in k_list:
             x = tf.constant(trainData, tf.float64); #80x1
             z = tf.constant(X, tf.float64); #1000x1 
             
-            #x = tf.cast(x, tf.float64)
-            #z = tf.cast(z, tf.float64)
-            
-            distance_mat = euclidian_distance(x,z) #using test points in X and training data 
+            distance_mat = euclidian_distance(z,x) #using test points in X and training data 
             resMat = responsibility(distance_mat, k_num) 
             sess.run(tf.global_variables_initializer());
-
+            #calculate the prediction using the trainTarget
+            X_predictions = calculate_predictions(trainTarget,resMat); 
             
-            X_predictions = calculate_predictions(trainTarget,resMat); #calculate the prediction using the trainTarget
-            print("X_predictions: ", X_predictions.shape)
-            print("X: ", X.shape)     
+            print("distance mat shape",distance_mat.shape);
+            print("X_predictions shape: ", X_predictions.shape)
+            print("responsibility matrix shape: ", resMat.shape);
     
             plt.figure(k_num+1) #set scale
             plt.plot(trainData, trainTarget,'.') #both are 80x1  #plot data against target
             
             X_predictions_ = sess.run(X_predictions)
+            #print(sess.run(X_predictions));
+
             plt.plot(X, X_predictions_,'-') #plot X data against X prediction
             plt.title("k-NN regression, k =%d"%k_num)
             plt.show()
