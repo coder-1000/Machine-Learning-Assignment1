@@ -45,8 +45,7 @@ def responsibility(distanceMatrix, k):
     ref = tf.Variable(tf.zeros([size],tf.float32));
     
     with tf.Session() as session:
-        session.run(tf.global_variables_initializer());#allows us to use tf.variable
-    
+        session.run(tf.global_variables_initializer());#allows us to use tf.variable 
         resVec =  tf.scatter_update(ref,flatIndices, flatRes);   
         
         #print("dimension matrix");
@@ -64,11 +63,31 @@ def responsibility(distanceMatrix, k):
 ###########################################################################
 
 
+#ASSUMING YOU ONLY SENT ROWS/COLUMNS THAT WERE VALID.
+#DON'T SEND EVERY TARGET VALUE IF YOU'RE TRYING TO GET THE PREDICTIONS FOR JUST TEST POINTS
 
+#targets = the target value of the test points. a qx1
+#responsibility matrix = rxq
+#q is the number of test points. r is the number of training points
+#result = returns the estimated y values given the responsibility matrix of a set of test points as a col vector
+def calculate_predictions(targets, resMat):
+    
+    yhats = tf.multiply(resMat,targets);#multiplies close targets by 1/k and sets others to 0 
+    yhats = tf.reduce_sum(yhats,1);#add the averaged values together
+    yhats = tf.transpose(yhats);
+    return(yhats);
 
+###########################################################################
 
+#predictions is a col vector
+#targets is a row vector
+#returns the mean squared error 
+def mse_lost(predictions,targets):
 
-
+    x = tf.transpose(predictions);
+    d = tf.transpose(targets);
+    distance = euclidian_distance(x, z);#squared error
+    mse = distance/2/x.shape[1];#mean squared error
 
 if __name__ == "__main__":
    
