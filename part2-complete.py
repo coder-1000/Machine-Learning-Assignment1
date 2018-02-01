@@ -92,7 +92,7 @@ def mse_loss(predictions,targets):
     distance = euclidian_distance(x, z);#squared error
     mse = distance/(tf.size(x, out_type = tf.float64));#mean squared error
     
-    loss = reduce_sum(loss, axis = 1)
+    loss = reduce_sum(mse, axis = 1)
     
     return loss
     
