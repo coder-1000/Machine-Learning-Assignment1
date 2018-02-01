@@ -82,7 +82,7 @@ def calculate_predictions(targets, resMat):
 #predictions is a col vector
 #targets is a row vector
 #returns the mean squared error 
-def mse_lost(predictions,targets):
+def mse_loss(predictions,targets):
 
     x = tf.transpose(predictions);
     d = tf.transpose(targets);
