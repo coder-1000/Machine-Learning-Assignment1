@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jan 31 19:29:57 2018
-
-@author: Farwa
-"""
-
 import tensorflow as tf;
 import numpy as np;
 
@@ -60,6 +53,7 @@ def responsibility(distanceMatrix, k):
         session.run(tf.global_variables_initializer());
         resVec =  tf.scatter_update(ref,flatIndices, flatRes); 
       
+    resVec = tf.reshape(resVec, [distanceMatrix.shape[0], distanceMatrix.shape[1]]);
 
     return resVec
 ###########################################################################
@@ -108,7 +102,7 @@ target = np.sin(data) + 0.1*np.power(data,2)+ 0.5 * np.random.randn(100,1)
 
 randIdx = np.arange(100)
 np.random.shuffle(randIdx)
-trainData, trainTarget = data[randIdx[:80]], target[randIdx[80:90]]
+trainData, trainTarget = data[randIdx[:80]], target[randIdx[:80]]
 validData, validTarget = data[randIdx[80:90]], target[randIdx[80:90]]
 testData, testTarget = data[randIdx[90:100]], target[randIdx[90:100]]
 
@@ -142,8 +136,25 @@ with tf.Session() as sess:
         train_dict[k_num] = train_loss;
     
         sess.run(tf.global_variables_initializer());
+  
         print("K", k_num)
+
+        print("distance_mat");
+        print(sess.run(distance_mat));
+        print(distance_mat);
+
+        print("res mat");
+        print(sess.run(resMat));
+        print(resMat);
+
+        print("train predicitions")
+        print(sess.run(train_predictions));
+        print(train_predictions);
+
+        print("training loss");
         print(sess.run(train_loss))
+        print(train_loss);
+        
 
         #print(sess.run(m))
     
