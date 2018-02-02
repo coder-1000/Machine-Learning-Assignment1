@@ -180,6 +180,7 @@ if __name__ == "__main__":
     print(valid_dict)
     
     k_min = min(valid_dict, key=valid_dict.get)
+    print(k_min)
     
 ############################################################################
 #plotting the data
