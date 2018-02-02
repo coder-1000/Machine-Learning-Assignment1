@@ -203,17 +203,15 @@ with tf.Session() as sess:
             #calculate the prediction using the trainTarget
             X_predictions = calculate_predictions(trainTarget,resMat); 
             
-            print("distance mat shape",distance_mat.shape);
-            print("X_predictions shape: ", X_predictions.shape)
-            print("responsibility matrix shape: ", resMat.shape);
-    
+            #create the plot
             plt.figure(k_num+1) #set scale
-            plt.plot(trainData, trainTarget,'.') #both are 80x1  #plot data against target
             
+            #plot traindata against traintarget
+            plt.plot(trainData, trainTarget,'.') #both are 80x1 matrices 
+            
+            #plot the X against the X_predictions
             X_predictions_ = sess.run(X_predictions)
-            #print(sess.run(X_predictions));
-
             plt.plot(X, X_predictions_,'-') #plot X data against X prediction
-            plt.title("k-NN regression, k =%d"%k_num)
+            plt.title("kNN regression plot, k =%d"%k_num)
             plt.show()
 
