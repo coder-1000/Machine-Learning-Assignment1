@@ -184,7 +184,7 @@ if __name__ == "__main__":
     
 ############################################################################
 #plotting the data
-'''
+
 import matplotlib.pyplot as plt
 #generates vector X to be used as test data
 X = np.linspace(1.0, 10.0, num = 1000)[:, np.newaxis]
@@ -216,4 +216,4 @@ with tf.Session() as sess:
             plt.plot(X, X_predictions_,'-') #plot X data against X prediction
             plt.title("k-NN regression, k =%d"%k_num)
             plt.show()
-'''
+
